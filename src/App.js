@@ -1,49 +1,58 @@
 import React from 'react';
+import axios from 'axios';
 
 import Header from './Header';
 import TodoList from './TodoList';
 import Footer from './Footer';
 
+const ax = axios.create({
+  baseURL: 'http://localhost:2403/todos'
+});
+
 class App extends React.Component {
   state = {
-    todos: [{
-      id: 1000,
-      text: '치킨에 맥주',
-      isDone: false
-    }, {
-      id: 1001,
-      text: '삼겹살에 소주',
-      isDone: false
-    }, {
-      id: 1002,
-      text: '떡순튀',
-      isDone: false
-    }],
+    todos: [],
     editingId: null,
     filterName: 'All'
   };
+
+  //로딩순서 willmount -> render -> didmount
+  //비동기라서 어차피 렌더는 두번이다. 따라서 ajax 호출시기는 willmount에서 해야 조금이라도 빨리 받을수 있다.
+
+  componentWillMount() {
+    ax.get('/')
+    .then(res => {
+      this.setState({
+        todos: res.data
+      });
+    });
+  }
+
+
   selectFilter = filterName => {
     this.setState({
       filterName
     });
   }
   addTodo = text => {
-    this.setState({
-      todos: [... this.state.todos, {
-        id: Date.now(),
-        text,
-        isDone: false
-      }]
+    ax.post('/', { text })
+    .then(res => {
+      this.setState({
+        todos: [ ... this.state.todos, res.data]
+      });
     });
   };
   deleteTodo = id => {
     // state를 직접 자르지 않기 위해 clone을 만들어서 자른뒤 setState 한다.
     const newTodos = [...this.state.todos];
     const deleteIndex = newTodos.findIndex(v => v.id === id);
-    console.log(deleteIndex);
-    newTodos.splice(deleteIndex, 1);
-    this.setState({
-      todos: newTodos
+
+    ax.delete(`/${id}`)
+    .then(() => {
+      newTodos.splice(deleteIndex, 1);
+      this.setState({
+        todos: newTodos
+      });
     });
   };
   editTodo = id => {
@@ -54,12 +63,14 @@ class App extends React.Component {
   saveTodo = (id, newText) => {
     const newTodos = [...this.state.todos];
     const editIndex = newTodos.findIndex(v => v.id === id);
-    newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
-      text: newText
-    });
-    this.setState({
-      todos: newTodos,
-      editingId: null
+
+    ax.put(`/${id}`, { text: newText })
+    .then(res => {
+      newTodos[editIndex] = res.data;
+      this.setState({
+        todos: newTodos,
+        editingId: null
+      });
     });
   };
   cancelEdit = () => {
@@ -70,30 +81,43 @@ class App extends React.Component {
   toggleTodo = id => {
     const newTodos = [...this.state.todos];
     const editIndex = newTodos.findIndex(v => v.id === id);
-    newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
-      isDone: !newTodos[editIndex].isDone
-    });
-    this.setState({
-      todos: newTodos
+    ax.put(`/${id}`, { isDone: !newTodos[editIndex].isDone })
+    .then(res => {
+      newTodos[editIndex] = res.data;
+      this.setState({
+        todos: newTodos
+      });
     });
   };
   toggleAll = () => {
     //두가지 방법 모두 가능하지만 동작은 some이 빠름
     // const newDone = !this.state.todos.every(v => v.isDone);
     const newDone = this.state.todos.some(v => !v.isDone);
-    const newTodos = this.state.todos.map(v =>
-      Object.assign({}, v, {
-        isDone: newDone
-      })
-    );
-    this.setState({
-      todos: newTodos
+    const axArray = this.state.todos.map(v => (
+      ax.put(`/${v.id}`, { isDone: newDone })
+    ));
+
+    // axios.all([axios.delete(), axios.put(), promise, ...])
+    // .then() //모두 성공하고 나서야 then을 실행함
+
+    axios.all(axArray)
+    .then(res => {
+      this.setState({
+        todos: res.map(v => v.data)
+      });
     });
   };
   clearCompleted = () => {
     const newTodos = this.state.todos.filter(v => !v.isDone);
-    this.setState({
-      todos: newTodos
+    const axArray = this.state.todos.filter(v => v.isDone)
+          .map(v => (
+            ax.delete(`/${v.id}`)
+          ));
+
+    axios.all(axArray). then(() => {
+      this.setState({
+        todos: newTodos
+      });
     });
   };
   render(){
