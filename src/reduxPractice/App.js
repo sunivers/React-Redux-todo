@@ -6,6 +6,7 @@ class App extends React.Component {
     state = {
         accountList: []
     };
+    
     calculate = (type, money) => {
         money = money * 1;
         if(typeof money !== 'number') {

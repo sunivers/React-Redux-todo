@@ -24,13 +24,13 @@ class InputBox extends React.Component {
                     style={this.buttonStyle}
                     onClick={() => this.calculate('save')}
                 >
-                    입금
+                  입금
                 </button>
                 <button
                     style={this.buttonStyle}
                     onClick={() => this.calculate('withdraw')}
                 >
-                    출금
+                  출금
                 </button>
             </div>
         );
