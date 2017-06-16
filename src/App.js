@@ -47,7 +47,7 @@ class App extends React.Component {
   };
 
   deleteTodo = id => {
-    // state를 직접 자르지 않기 위해 clone을 만들어서 자른뒤 setState 한다.
+    // 낙관적 업데이트
     const prevTodos = [...this.state.todos];
     const deleteIndex = prevTodos.findIndex(v => v.id === id);
     const newTodos = update(prevTodos, {
@@ -101,7 +101,7 @@ class App extends React.Component {
 
   toggleTodo = id => {
     const prevTodos = [...this.state.todos];
-    const editIndex = newTodos.findIndex(v => v.id === id);
+    const editIndex = prevTodos.findIndex(v => v.id === id);
     const newDone = !prevTodos[editIndex].isDone;
     const newTodos = update(prevTodos, {
       [editIndex]: {
@@ -112,7 +112,7 @@ class App extends React.Component {
     });
     this.setState({ todos: newTodos });
 
-    ax.put(`/${id}`, { isDone: !newTodos[editIndex].isDone })
+    ax.put(`/${id}`, { isDone: newTodos[editIndex].isDone })
     .catch(() => {
       this.setState({ todos: prevTodos });
     });
@@ -200,6 +200,7 @@ class App extends React.Component {
           hasCompleted={hasCompleted}
           clearCompleted={this.clearCompleted}
           selectFilter={this.selectFilter}
+          filterName={filterName}
         />
       </div>
     );
