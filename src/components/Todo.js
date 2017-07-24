@@ -29,19 +29,17 @@ class Todo extends React.Component {
       text,
       isEditing,
       isDone,
+      isTemporal,
       editTodo,
       deleteTodo,
       cancelEdit,
       toggleTodo
     } = this.props;
     return (
-      // <li className={[
-      //   'todo-item',
-      //   this.state.isEditing ? 'editing' : ''
-      // ].join(' ')}>
       <li className={ClassNames('todo-item', {
         editing: isEditing,
-        completed: isDone
+        completed: isDone,
+        temporal: isTemporal
       })}>
         <button
           className="toggle"
@@ -61,7 +59,7 @@ class Todo extends React.Component {
           type="text"
           ref={ref => this._inputDom = ref}
           className="todo-item__edit"
-          onKeyDown={this.handleKeyDown}
+          onKeyDown={e => this.handleKeyDown(e)}
           onBlur={cancelEdit}
         />
       </li>

@@ -13,7 +13,7 @@ class TodoList extends React.Component {
       toggleTodo
     } = this.props;
 
-    const todoList = todos.map(({ id, text, isDone }) => (
+    const todoList = todos.map(({ id, text, isDone, isTemporal }) => (
       <Todo
         key={id}
         text={text}

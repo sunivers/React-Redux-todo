@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import ClassNames from 'classnames';
 
 class Footer extends React.Component {
-  filterNames = ['', 'Active', 'Completed'];
+  filterNames = ['', 'active', 'completed'];
 
   render(){
     const {
       filterName,
-      selectFilter,
       activeLength,
       hasCompleted,
       clearCompleted
