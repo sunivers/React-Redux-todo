@@ -10,16 +10,16 @@ gulp
 - gulp는 pipe
 
 ```
-`bower`
-`npm`
-`yarn`
+bower
+npm
+yarn
 ```
 - js라이브러리 쉽게 추가해주는 기능을 한다.
 - yarn은 npm을 대체할만한 강력한 녀석
 - bower는 css까지 관리
 
 ```
-`yo(yeoman)`
+yo(yeoman)
 ```
 - boilerplate tool
 - html 필수 태그 등 기본세팅을 도와줌
@@ -28,7 +28,6 @@ gulp
 babel
 ```
 - ES6 문법을 ES5로 인식하게끔 바꿔주는 녀석. 크로스브라우징!
-`browserify`
 ```
 webpack
 ```
@@ -37,7 +36,9 @@ webpack
 - bundler <-> concat
 - bundler는 모듈관리 포함 (AMD, COMMON.js) : COMMON.js의 경우 NODE.js에 쓰임 ex)var $ = require(‘js’); -> bundle.js 처럼 결과물이 한개의 파일. 따라서 http 리퀘스트 횟수가 한번으로 줄어들어 훨씬 빨라짐. 파일 용량 크더라도 리퀘스트 횟수 적은게 훨씬 빠르다.
 - concat은 단순히 파일관리 형식
-
+```
+browserify
+```
 
 ## 라이브러리/프레임워크
 
