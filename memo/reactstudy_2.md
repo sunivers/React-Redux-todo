@@ -17,14 +17,14 @@ ES6에서는 변수선언 없이 사용하거나 에러 가능성 있는 상황�
 기존 객체 내 함수에서 this를 쓰면 window객체가 할당되었음. (외부 this를 사용할 수 없다.)
 그러나 arrow function 에서는 객체 내 함수에서 this 사용하면 객체가 할당됨. 아주 좋다. (객체 내 어디서든 this는 자기자신)
 
-ture/false 확인하는법
+### ture/false 확인하는법
 !!null
 !!0
 !!1
 !!’’
 앞에 !!를 붙인다.
 
-false 출력하는 애들 5가지
+### false 출력하는 애들 5가지
 0
 ‘’
 false
@@ -32,7 +32,7 @@ null //비어있는 ‘실존값’
 undefined //empty
 NaN
 
-객체 내 함수에서는 arrow function 쓰는것 권장되지 않음.
+- 객체 내 함수에서는 arrow function 쓰는것 권장되지 않음.
 왜냐하면 this를 받아올 수 없기 때문에...
 
 
